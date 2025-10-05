@@ -22,7 +22,31 @@ document.addEventListener('DOMContentLoaded', function() {
     if (searchInput && !searchInput.value) {
         searchInput.focus();
     }
+    
+    // 拼音显示控制
+    const pinyinToggle = document.getElementById('show-pinyin');
+    if (pinyinToggle) {
+        // 从 localStorage 读取用户偏好
+        const showPinyin = localStorage.getItem('showPinyin') !== 'false';
+        pinyinToggle.checked = showPinyin;
+        togglePinyin(showPinyin);
+        
+        // 监听切换
+        pinyinToggle.addEventListener('change', function() {
+            const show = this.checked;
+            togglePinyin(show);
+            localStorage.setItem('showPinyin', show);
+        });
+    }
 });
+
+// 切换拼音显示
+function togglePinyin(show) {
+    const pinyinElements = document.querySelectorAll('.poem-pinyin');
+    pinyinElements.forEach(el => {
+        el.style.display = show ? 'flex' : 'none';
+    });
+}
 
 // 随机诗词 API 调用示例
 async function getRandomPoem() {

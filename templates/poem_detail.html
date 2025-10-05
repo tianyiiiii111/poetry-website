@@ -14,10 +14,27 @@
         </div>
 
         <div class="poem-body">
-            {% for line in poem.paragraphs %}
-            <p class="poem-line">{{ line }}</p>
+            {% for i in range(poem.paragraphs|length) %}
+            <div class="poem-line-container">
+                {% if poem.pinyin and poem.pinyin|length > i %}
+                <div class="poem-pinyin" id="pinyin-line-{{ i }}">
+                    {% for py in poem.pinyin[i] %}
+                    <span class="pinyin-char">{{ py }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <p class="poem-line">{{ poem.paragraphs[i] }}</p>
+            </div>
             {% endfor %}
         </div>
+        
+        {% if poem.pinyin %}
+        <div class="pinyin-toggle">
+            <label>
+                <input type="checkbox" id="show-pinyin" checked> 显示拼音
+            </label>
+        </div>
+        {% endif %}
 
         {% if poem.tags %}
         <div class="poem-tags">

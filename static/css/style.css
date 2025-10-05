@@ -572,6 +572,47 @@ body {
     text-align: center;
 }
 
+/* 拼音样式 */
+.poem-line-container {
+    margin: 1rem 0;
+}
+
+.poem-pinyin {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-family: Arial, sans-serif;
+}
+
+.pinyin-char {
+    display: inline-block;
+    min-width: 1.5em;
+    text-align: center;
+}
+
+.pinyin-toggle {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1rem;
+    background: var(--bg-color);
+    border-radius: 10px;
+}
+
+.pinyin-toggle label {
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-color);
+    user-select: none;
+}
+
+.pinyin-toggle input[type="checkbox"] {
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
     .hero-title {

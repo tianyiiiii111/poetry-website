@@ -100,6 +100,51 @@ def import_poems():
         print(f'诗经导入完成: {count} 首')
         conn.commit()
     
+    # 导入楚辞
+    chuci_file = raw_dir / '楚辞' / 'chuci.json'
+    if chuci_file.exists():
+        print('\n开始导入楚辞...')
+        count = import_from_file(cursor, chuci_file, '先秦')
+        total_count += count
+        print(f'楚辞导入完成: {count} 首')
+        conn.commit()
+    
+    # 导入曹操诗集
+    caocao_file = raw_dir / '曹操诗集' / 'caocao.json'
+    if caocao_file.exists():
+        print('\n开始导入曹操诗集...')
+        count = import_from_file(cursor, caocao_file, '汉')
+        total_count += count
+        print(f'曹操诗集导入完成: {count} 首')
+        conn.commit()
+    
+    # 导入五代诗词 - 花间集
+    huajianji_dir = raw_dir / '五代诗词' / 'huajianji'
+    if huajianji_dir.exists():
+        print('\n开始导入五代诗词（花间集）...')
+        count = import_from_directory(cursor, huajianji_dir, '五代', '*.json')
+        total_count += count
+        print(f'花间集导入完成: {count} 首')
+        conn.commit()
+    
+    # 导入五代诗词 - 南唐
+    nantang_dir = raw_dir / '五代诗词' / 'nantang'
+    if nantang_dir.exists():
+        print('\n开始导入五代诗词（南唐）...')
+        count = import_from_directory(cursor, nantang_dir, '五代', '*.json')
+        total_count += count
+        print(f'南唐诗词导入完成: {count} 首')
+        conn.commit()
+    
+    # 导入纳兰性德
+    nalan_file = raw_dir / '纳兰性德' / '纳兰性德诗集.json'
+    if nalan_file.exists():
+        print('\n开始导入纳兰性德...')
+        count = import_from_file(cursor, nalan_file, '清')
+        total_count += count
+        print(f'纳兰性德导入完成: {count} 首')
+        conn.commit()
+    
     # 构建全文搜索索引
     print('\n构建全文搜索索引...')
     cursor.execute('''
@@ -167,11 +212,12 @@ def import_poem(cursor, poem_data, dynasty):
         title = poem_data.get('title', '无题')
         author = poem_data.get('author', '佚名')
         
-        # 处理内容
+        # 处理内容（兼容不同格式）
         paragraphs = poem_data.get('paragraphs', [])
         if not paragraphs:
-            # 有些数据格式可能不同
             paragraphs = poem_data.get('content', [])
+        if not paragraphs:
+            paragraphs = poem_data.get('para', [])  # 纳兰性德格式
         
         if not paragraphs:
             return False

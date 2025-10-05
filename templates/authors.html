@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}诗人列表 - 古诗词网{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="authors-page">
+        <h1 class="page-title">诗人列表</h1>
+        <p class="page-subtitle">共 {{ pagination.total }} 位诗人</p>
+
+        {% if authors %}
+        <div class="authors-grid">
+            {% for author in authors %}
+            <a href="{{ url_for('author_poems', author=author.author) }}" class="author-card">
+                <h3>{{ author.author }}</h3>
+                <p class="dynasty">{{ author.dynasty }}</p>
+                <p class="poem-count">{{ author.poem_count }} 首</p>
+            </a>
+            {% endfor %}
+        </div>
+
+        {% if pagination.total_pages > 1 %}
+        <div class="pagination">
+            {% if pagination.page > 1 %}
+            <a href="{{ url_for('authors', page=pagination.page-1) }}" class="btn">← 上一页</a>
+            {% endif %}
+            
+            <span class="page-info">第 {{ pagination.page }} / {{ pagination.total_pages }} 页</span>
+            
+            {% if pagination.page < pagination.total_pages %}
+            <a href="{{ url_for('authors', page=pagination.page+1) }}" class="btn">下一页 →</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

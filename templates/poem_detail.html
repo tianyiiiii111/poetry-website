@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}{{ poem.title }} - {{ poem.author }} - 古诗词网{% endblock %}
+
+{% block content %}
+<div class="container">
+    <article class="poem-detail">
+        <div class="poem-header">
+            <h1 class="poem-title-large">{{ poem.title }}</h1>
+            <div class="poem-meta">
+                <span class="dynasty-badge">{{ poem.dynasty }}</span>
+                <a href="{{ url_for('author_poems', author=poem.author) }}" class="author-link">{{ poem.author }}</a>
+            </div>
+        </div>
+
+        <div class="poem-body">
+            {% for line in poem.paragraphs %}
+            <p class="poem-line">{{ line }}</p>
+            {% endfor %}
+        </div>
+
+        {% if poem.tags %}
+        <div class="poem-tags">
+            {% for tag in poem.tags %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </article>
+
+    {% if other_poems %}
+    <section class="related-poems">
+        <h2 class="section-title">{{ poem.author }} 的其他作品</h2>
+        <div class="poem-grid">
+            {% for other_poem in other_poems %}
+            <div class="poem-card">
+                <h3 class="poem-title">
+                    <a href="{{ url_for('poem_detail', poem_id=other_poem.id) }}">{{ other_poem.title }}</a>
+                </h3>
+                <div class="poem-preview">
+                    {{ other_poem.paragraphs[0] if other_poem.paragraphs else '' }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center">
+            <a href="{{ url_for('author_poems', author=poem.author) }}" class="btn">查看更多 →</a>
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

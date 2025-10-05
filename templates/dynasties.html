@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}朝代列表 - 古诗词网{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="dynasties-page">
+        <h1 class="page-title">朝代列表</h1>
+        
+        {% if dynasties %}
+        <div class="dynasty-grid">
+            {% for dynasty in dynasties %}
+            <a href="{{ url_for('dynasty_poems', dynasty=dynasty.dynasty) }}" class="dynasty-card large">
+                <h2>{{ dynasty.dynasty }}</h2>
+                <p class="poem-count">{{ dynasty.poem_count }} 首诗词</p>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

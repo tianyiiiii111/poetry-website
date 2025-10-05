@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}搜索{% if keyword %}: {{ keyword }}{% endif %} - 古诗词网{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="search-page">
+        <h1 class="page-title">搜索诗词</h1>
+        
+        <form action="{{ url_for('search') }}" method="get" class="search-form-large">
+            <input type="text" name="q" placeholder="搜索诗词、作者、内容..." value="{{ keyword or '' }}" required autofocus>
+            <button type="submit">搜索</button>
+        </form>
+
+        {% if message %}
+        <div class="message">{{ message }}</div>
+        {% endif %}
+
+        {% if poems %}
+        <div class="search-results">
+            <p class="result-count">找到 {{ poems|length }} 首相关诗词</p>
+            
+            <div class="poem-list">
+                {% for poem in poems %}
+                <div class="poem-card">
+                    <h3 class="poem-title">
+                        <a href="{{ url_for('poem_detail', poem_id=poem.id) }}">{{ poem.title }}</a>
+                    </h3>
+                    <p class="poem-author">
+                        <span class="dynasty">{{ poem.dynasty }}</span> · 
+                        <a href="{{ url_for('author_poems', author=poem.author) }}">{{ poem.author }}</a>
+                    </p>
+                    <div class="poem-preview">
+                        {% if poem.paragraphs %}
+                        {{ poem.paragraphs[0] }}
+                        {% if poem.paragraphs|length > 1 %}
+                        <br>{{ poem.paragraphs[1] }}
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

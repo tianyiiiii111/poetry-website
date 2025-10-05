@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ author }} 的诗词 - 古诗词网{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="author-page">
+        <div class="page-header">
+            <h1 class="page-title">{{ author }}</h1>
+            {% if poems %}
+            <p class="page-subtitle">共 {{ pagination.total }} 首作品</p>
+            {% endif %}
+        </div>
+
+        {% if poems %}
+        <div class="poem-list">
+            {% for poem in poems %}
+            <div class="poem-card">
+                <h3 class="poem-title">
+                    <a href="{{ url_for('poem_detail', poem_id=poem.id) }}">{{ poem.title }}</a>
+                </h3>
+                <p class="poem-dynasty">{{ poem.dynasty }}</p>
+                <div class="poem-preview">
+                    {% if poem.paragraphs %}
+                    {% set paragraphs = poem.paragraphs if poem.paragraphs is iterable and poem.paragraphs is not string else [] %}
+                    {% for line in paragraphs[:2] %}
+                    {{ line }}<br>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if pagination.total_pages > 1 %}
+        <div class="pagination">
+            {% if pagination.page > 1 %}
+            <a href="{{ url_for('author_poems', author=author, page=pagination.page-1) }}" class="btn">← 上一页</a>
+            {% endif %}
+            
+            <span class="page-info">第 {{ pagination.page }} / {{ pagination.total_pages }} 页</span>
+            
+            {% if pagination.page < pagination.total_pages %}
+            <a href="{{ url_for('author_poems', author=author, page=pagination.page+1) }}" class="btn">下一页 →</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

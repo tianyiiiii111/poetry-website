@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - 古诗词网{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="container">
+        <h1 class="hero-title">诗词雅集</h1>
+        <p class="hero-subtitle">品味千年诗韵，传承中华文化</p>
+        
+        {% if stats %}
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">{{ stats.total_poems }}</div>
+                <div class="stat-label">诗词</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ stats.total_authors }}</div>
+                <div class="stat-label">作者</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ stats.total_dynasties }}</div>
+                <div class="stat-label">朝代</div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="container">
+    {% if poem %}
+    <section class="daily-poem">
+        <h2 class="section-title">今日诗词</h2>
+        <div class="poem-card featured">
+            <h3 class="poem-title">
+                <a href="{{ url_for('poem_detail', poem_id=poem.id) }}">{{ poem.title }}</a>
+            </h3>
+            <p class="poem-author">
+                <span class="dynasty">{{ poem.dynasty }}</span> · 
+                <a href="{{ url_for('author_poems', author=poem.author) }}">{{ poem.author }}</a>
+            </p>
+            <div class="poem-content">
+                {% for line in poem.paragraphs %}
+                <p>{{ line }}</p>
+                {% endfor %}
+            </div>
+            <a href="{{ url_for('poem_detail', poem_id=poem.id) }}" class="read-more">阅读全文 →</a>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if dynasties %}
+    <section class="dynasties-section">
+        <h2 class="section-title">按朝代浏览</h2>
+        <div class="dynasty-grid">
+            {% for dynasty in dynasties %}
+            <a href="{{ url_for('dynasty_poems', dynasty=dynasty.dynasty) }}" class="dynasty-card">
+                <h3>{{ dynasty.dynasty }}</h3>
+                <p>{{ dynasty.poem_count }} 首</p>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

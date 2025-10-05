@@ -13,12 +13,30 @@ class PoemModel:
             
         with get_db() as conn:
             cursor = conn.cursor()
+            
+            # 尝试 FTS5 全文搜索
+            try:
+                cursor.execute('''
+                    SELECT p.* FROM poems p
+                    JOIN poems_fts ON poems_fts.rowid = p.id
+                    WHERE poems_fts MATCH ?
+                    LIMIT ?
+                ''', (keyword, limit))
+                rows = cursor.fetchall()
+                
+                # 如果 FTS5 搜索有结果，直接返回
+                if rows:
+                    return [PoemModel._row_to_dict(row) for row in rows]
+            except:
+                pass
+            
+            # 如果 FTS5 搜索失败或无结果，使用 LIKE 模糊搜索
+            search_pattern = f'%{keyword}%'
             cursor.execute('''
-                SELECT p.* FROM poems p
-                JOIN poems_fts ON poems_fts.rowid = p.id
-                WHERE poems_fts MATCH ?
+                SELECT * FROM poems 
+                WHERE title LIKE ? OR author LIKE ? OR content LIKE ?
                 LIMIT ?
-            ''', (keyword, limit))
+            ''', (search_pattern, search_pattern, search_pattern, limit))
             
             rows = cursor.fetchall()
             return [PoemModel._row_to_dict(row) for row in rows]
@@ -59,7 +77,7 @@ class PoemModel:
             ''', (author, page_size, offset))
             
             rows = cursor.fetchall()
-            poems = [dict(row) for row in rows]
+            poems = [PoemModel._row_to_dict(row) for row in rows]
             
             return {
                 'poems': poems,
@@ -93,7 +111,7 @@ class PoemModel:
             ''', (dynasty, page_size, offset))
             
             rows = cursor.fetchall()
-            poems = [dict(row) for row in rows]
+            poems = [PoemModel._row_to_dict(row) for row in rows]
             
             return {
                 'poems': poems,

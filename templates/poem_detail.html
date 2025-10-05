@@ -35,10 +35,21 @@
             {% for other_poem in other_poems %}
             <div class="poem-card">
                 <h3 class="poem-title">
-                    <a href="{{ url_for('poem_detail', poem_id=other_poem.id) }}">{{ other_poem.title }}</a>
+                    <a href="{{ url_for('poem_detail', poem_id=other_poem.id) }}">
+                        {% if other_poem.title == '无题' and other_poem.paragraphs and other_poem.paragraphs|length > 0 %}
+                            无题·{{ other_poem.paragraphs[0][:15] }}{% if other_poem.paragraphs[0]|length > 15 %}...{% endif %}
+                        {% else %}
+                            {{ other_poem.title }}
+                        {% endif %}
+                    </a>
                 </h3>
                 <div class="poem-preview">
-                    {{ other_poem.paragraphs[0] if other_poem.paragraphs else '' }}
+                    {% if other_poem.paragraphs and other_poem.paragraphs|length > 0 %}
+                        {{ other_poem.paragraphs[0] }}
+                        {% if other_poem.paragraphs|length > 1 %}
+                        <br>{{ other_poem.paragraphs[1] }}
+                        {% endif %}
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}

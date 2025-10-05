@@ -113,7 +113,7 @@ def import_poems():
     caocao_file = raw_dir / '曹操诗集' / 'caocao.json'
     if caocao_file.exists():
         print('\n开始导入曹操诗集...')
-        count = import_from_file(cursor, caocao_file, '汉')
+        count = import_from_file(cursor, caocao_file, '魏晋')  # 曹操属于东汉末/三国时期
         total_count += count
         print(f'曹操诗集导入完成: {count} 首')
         conn.commit()
@@ -209,7 +209,9 @@ def import_poem(cursor, poem_data, dynasty):
     """导入单首诗词"""
     try:
         # 提取数据
-        title = poem_data.get('title', '无题')
+        title = poem_data.get('title', '').strip()
+        if not title:
+            title = '无题'
         author = poem_data.get('author', '佚名')
         
         # 处理内容（兼容不同格式）

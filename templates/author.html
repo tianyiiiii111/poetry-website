@@ -17,15 +17,21 @@
             {% for poem in poems %}
             <div class="poem-card">
                 <h3 class="poem-title">
-                    <a href="{{ url_for('poem_detail', poem_id=poem.id) }}">{{ poem.title }}</a>
+                    <a href="{{ url_for('poem_detail', poem_id=poem.id) }}">
+                        {% if poem.title == '无题' and poem.paragraphs and poem.paragraphs|length > 0 %}
+                            无题·{{ poem.paragraphs[0][:15] }}{% if poem.paragraphs[0]|length > 15 %}...{% endif %}
+                        {% else %}
+                            {{ poem.title }}
+                        {% endif %}
+                    </a>
                 </h3>
                 <p class="poem-dynasty">{{ poem.dynasty }}</p>
                 <div class="poem-preview">
-                    {% if poem.paragraphs %}
-                    {% set paragraphs = poem.paragraphs if poem.paragraphs is iterable and poem.paragraphs is not string else [] %}
-                    {% for line in paragraphs[:2] %}
-                    {{ line }}<br>
-                    {% endfor %}
+                    {% if poem.paragraphs and poem.paragraphs|length > 0 %}
+                        {{ poem.paragraphs[0] }}<br>
+                        {% if poem.paragraphs|length > 1 %}
+                        {{ poem.paragraphs[1] }}
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

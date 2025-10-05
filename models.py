@@ -68,11 +68,13 @@ class PoemModel:
             cursor.execute('SELECT COUNT(*) as total FROM poems WHERE author = ?', (author,))
             total = cursor.fetchone()['total']
             
-            # 获取分页数据
+            # 获取分页数据（有标题的诗歌优先）
             cursor.execute('''
                 SELECT * FROM poems 
                 WHERE author = ?
-                ORDER BY id
+                ORDER BY 
+                    CASE WHEN title = '无题' THEN 1 ELSE 0 END,
+                    id
                 LIMIT ? OFFSET ?
             ''', (author, page_size, offset))
             
@@ -102,11 +104,13 @@ class PoemModel:
             cursor.execute('SELECT COUNT(*) as total FROM poems WHERE dynasty = ?', (dynasty,))
             total = cursor.fetchone()['total']
             
-            # 获取分页数据
+            # 获取分页数据（有标题的诗歌优先）
             cursor.execute('''
                 SELECT * FROM poems 
                 WHERE dynasty = ?
-                ORDER BY id
+                ORDER BY 
+                    CASE WHEN title = '无题' THEN 1 ELSE 0 END,
+                    id
                 LIMIT ? OFFSET ?
             ''', (dynasty, page_size, offset))
             

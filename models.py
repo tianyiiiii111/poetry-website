@@ -247,4 +247,10 @@ class PoemModel:
             except:
                 poem['tags'] = []
         
+        if 'pinyin' in poem and poem['pinyin']:
+            try:
+                poem['pinyin'] = json.loads(poem['pinyin'])
+            except:
+                poem['pinyin'] = []
+        
         return poem
